@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rumpl/nomad_invoc/pkg/nomad"
+	"github.com/rumpl/nomad-invoc/pkg/nomad"
 )
 
 type cnabAction func(nomad.NomadInvocation, string) error

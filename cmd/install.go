@@ -5,7 +5,7 @@ import (
 
 	"github.com/docker/app/types"
 	"github.com/hashicorp/nomad/api"
-	"github.com/rumpl/nomad_invoc/pkg/nomad"
+	"github.com/rumpl/nomad-invoc/pkg/nomad"
 )
 
 func installAction(n nomad.NomadInvocation, name string) error {
