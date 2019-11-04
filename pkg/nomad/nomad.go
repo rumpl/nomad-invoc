@@ -1,7 +1,9 @@
 package nomad
 
+// NomadInvocation represents the actions that
+// it can perform
 type NomadInvocation interface {
-	Install() error
+	Install(name string) error
 	Upgrade() error
 	Uninstall() error
 }
@@ -9,6 +11,7 @@ type NomadInvocation interface {
 type nomadInvocation struct {
 }
 
+// New creates a new Nomad invocation
 func New() NomadInvocation {
 	return nomadInvocation{}
 }

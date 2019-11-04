@@ -191,11 +191,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:91ce1d49ffe26a928c0ed1e42f0e045a38e731b86f5426013fa99abd420bba71"
+  digest = "1:596a6631704652aa934fd8d2dbf0b0a8961f568c07e928bee700ddec5a6a0c2d"
   name = "github.com/docker/app"
   packages = [
     "internal",
+    "internal/compose",
+    "internal/formatter",
+    "internal/formatter/driver",
+    "internal/formatter/json",
+    "internal/formatter/yaml",
     "internal/yaml",
+    "render",
     "specification",
     "types",
     "types/metadata",
@@ -205,7 +211,7 @@
   revision = "3e2545dcf4fa49844e2f6c9cb8aeb55e18cf19a4"
 
 [[projects]]
-  digest = "1:61b93063c7fca5abe5eb129e565e14ce79368d38e3cd20b36e7daa43b87a3c8e"
+  digest = "1:0341d5e0e4dc8db96f2fd834861e5e1e3188198cb2ac839d22658d899ea49386"
   name = "github.com/docker/cli"
   packages = [
     "cli/command",
@@ -239,8 +245,7 @@
     "types",
   ]
   pruneopts = "UT"
-  revision = "2355349d8b99ea2c15bbdd7f1f203fa078e9bb4e"
-  version = "v19.03.4"
+  revision = "d83cd90464377d4164c8f70248d064b979e5ca98"
 
 [[projects]]
   digest = "1:ff5d565ba346a85086c63a6f0f12f9d49bcf0337931d792c0f6f1b1325757726"
@@ -1082,8 +1087,10 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/docker/app/render",
     "github.com/docker/app/types",
     "github.com/hashicorp/nomad/api",
+    "github.com/pkg/errors",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
