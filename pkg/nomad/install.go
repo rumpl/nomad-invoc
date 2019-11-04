@@ -15,10 +15,6 @@ import (
 
 func (n nomadInvocation) Install(name string) error {
 	fmt.Println("Installing app", name)
-	// Placeholder to keep the import of nomad because I am scared
-	// of go dependency management
-	job := api.Job{}
-	fmt.Println(job)
 
 	app, err := getApp()
 	if err != nil {
@@ -31,9 +27,69 @@ func (n nomadInvocation) Install(name string) error {
 		return err
 	}
 
+	tasks := []*api.Task{}
 	for _, service := range rendered.Services {
 		fmt.Println("Service", service.Name)
+		tasks = append(tasks, &api.Task{
+			Name:   service.Name,
+			Driver: "docker",
+			Config: map[string]interface{}{
+				"image": service.Image,
+				"args":  service.Command,
+			},
+			Resources: &api.Resources{
+				Networks: []*api.NetworkResource{
+					&api.NetworkResource{
+						ReservedPorts: []api.Port{
+							api.Port{
+								Label: "http",
+								To:    int(service.Ports[0].Target),
+								Value: int(service.Ports[0].Published),
+							},
+						},
+					},
+				},
+			},
+			Services: []*api.Service{
+				&api.Service{
+					Name:      service.Name,
+					PortLabel: "http",
+				},
+			},
+		})
 	}
+
+	dd := "hello"
+	tname := "tasks"
+	job := api.Job{
+		ID: &dd,
+		Datacenters: []string{
+			"dc1",
+		},
+		TaskGroups: []*api.TaskGroup{
+			&api.TaskGroup{
+				Name:  &tname,
+				Tasks: tasks,
+			},
+		},
+	}
+
+	config := api.DefaultConfig()
+	config.Address = "http://host.docker.internal:4646"
+	client, err := api.NewClient(config)
+	if err != nil {
+		return err
+	}
+
+	opts := &api.RegisterOptions{}
+	resp, _, err := client.Jobs().RegisterOpts(&job, opts, nil)
+	if err != nil {
+		return err
+	}
+	if resp.Warnings != "" {
+		fmt.Println(resp.Warnings)
+	}
+	fmt.Println("Eval ID", resp.EvalID)
 
 	return nil
 }
